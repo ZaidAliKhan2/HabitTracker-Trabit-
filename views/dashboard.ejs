@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar dashboardNavbar">
+        <div class="logoCont dashboardLogoCont">
+          <img src="/images/logo.png" alt="logo" width="100" height="100" />
+          <h1>TRABIT</h1>
+        </div>
+        <div class="loginBtnCont addBtnCont">
+          <button class="addHabitBtn" type="submit" name="addHabitBtn">
+            + Add Habit
+          </button>
+        </div>
+      </nav>
+    </header>
+    <div class="header">
+      <h1>Hey there, <%= user.name %></h1>
+    </div>
+    <h2 id="quoteHeader">Fetching quote...</h2>
+
+    <div class="dateHeader">
+      <h1 class="dateText"></h1>
+      <p class="habitsCompleted"></p>
+    </div>
+    <div clas="streakLostCont">
+      <h1 class="streakLostText"></h1>
+    </div>
+
+    <div class="habitsGridCont">
+      <!-- Labels Row -->
+      <div class="habitLabel">Habit Name</div>
+      <div class="habitLabel">Completed</div>
+      <div class="habitLabel">Streak</div>
+      <div class="habitLabel">Edit</div>
+      <div class="habitLabel">Delete</div>
+    </div>
+
+    <!-- Habit Rows Wrapper -->
+    <div class="habitsRows">
+      <div class="habitSampleRow">
+        <div class="habitName rowItem">Sample Habit</div>
+        <span class="rowItem"><input type="checkbox" /></span>
+        <span class="habitStreak rowItem">🔥 5 days</span>
+        <span class="habitEdit rowItem">✏️</span>
+        <span class="habitDel rowItem sampleDel" name="deleteHabit">🗑️</span>
+      </div>
+    </div>
+
+    <div class="addHabitsModalCont">
+      <div class="xmarkImgCont">
+        <img src="../images/xmark.png" alt="xmark" width="30" height="40" />
+      </div>
+      <form id="addHabitsForm" autocomplete="off">
+        <label> Habit Name </label>
+        <input
+          type="text"
+          name="habitName"
+          placeholder="Enter Your Habit"
+          id="habitName"
+        />
+        <button type="submit" id="habitNameBtn">Add</button>
+      </form>
+    </div>
+
+    <div class="chartCont">
+      <div class="pieChartCont">
+        <h1 class="pieChartHeading">Trabit's Pie Chart</h1>
+        <div id="chart"></div>
+      </div>
+      <div class="streakChartCont">
+        <h1 class="streakChartHeading">Trabit's Streak Chart</h1>
+        <div id="streakChart"></div>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="/script.js"></script>
+</html>

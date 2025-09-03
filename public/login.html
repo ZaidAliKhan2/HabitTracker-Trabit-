@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="loginBody">
+    <div class="loginCont">
+      <h1 class="loginHeading">Login</h1>
+      <form id="loginForm" class="loginForm">
+        <input type="email" name="loginEmail" placeholder="Email" required />
+        <input
+          type="password"
+          name="loginPassword"
+          placeholder="Password"
+          required
+        />
+        <button type="submit" name="loginSubmit" class="loginBtn">Login</button>
+      </form>
+      <span style="display: flex; gap: 5px">
+        <p>Don't have an account?</p>
+        <a href="/signup">Sign Up</a>
+      </span>
+    </div>
+    <script>
+      const form = document.getElementById("loginForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const loginEmail = form.loginEmail.value;
+        const loginPassword = form.loginPassword.value;
+
+        try {
+          const res = await fetch("/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ loginEmail, loginPassword }),
+          });
+
+          if (!res.ok) {
+            const errorText = await res.text();
+            console.error("Server responded with error:", errorText);
+            alert("Login failed: " + errorText);
+            return;
+          }
+
+          const data = await res.json();
+
+          // save to localStorage
+          localStorage.setItem("authToken", data.token);
+
+          // decode JWT
+          try {
+            // redirect to dashboard with id
+            window.location.href = `/dashboard/${data.id}?verified=success`;
+          } catch (decodeError) {
+            console.error("Error decoding JWT:", decodeError);
+            alert("Login failed: Unable to decode token.");
+          }
+        } catch (err) {
+          console.error("Login request failed:", err);
+          alert("Login failed: Network or server error.");
+        }
+      });
+    </script>
+  </body>
+</html>
