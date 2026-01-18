@@ -20,10 +20,12 @@ const __dirname = path.dirname(__filename);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Middleware
+// Middleware - ORDER MATTERS!
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+
+// CRITICAL: Static files MUST come BEFORE routes
+app.use(express.static(path.join(__dirname, "public")));
 
 // MongoDB connection with timeout
 mongoose
@@ -33,7 +35,7 @@ mongoose
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Routes
+// Routes - AFTER static files middleware
 app.get("/", (req, res) => {
   res.redirect("/login");
 });
