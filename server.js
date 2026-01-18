@@ -10,27 +10,38 @@ import { User } from "./models/userSchema.js";
 
 dotenv.config();
 
-//db connection string
-mongoose.connect(process.env.MONGO_URL);
-
-//variables
+// Variables
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// View engine setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-//middleware
+// Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-//routes
-app.get("/", (req, res) => {});
+// MongoDB connection with timeout
+mongoose
+  .connect(process.env.MONGO_URL, {
+    serverSelectionTimeoutMS: 5000,
+  })
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// Routes
+app.get("/", (req, res) => {
+  res.redirect("/login");
+});
+
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 app.use("/dashboard", dashboardRouter);
+
 app.get("/quote", async (req, res) => {
   try {
     const response = await fetch("https://zenquotes.io/api/random");
@@ -41,6 +52,12 @@ app.get("/quote", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// Export for Vercel (serverless)
+export default app;
+
+// Only run server locally (not on Vercel)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+}
